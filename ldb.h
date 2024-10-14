@@ -11,6 +11,7 @@
 
 #define NODESIZE sizeof(node)
 #define HEADERSIZE sizeof(header)
+#define UINTSIZE sizeof(unsigned int)
 
 typedef unsigned long long int offset_t;
 
@@ -38,6 +39,7 @@ typedef struct return_node_s {
 typedef struct header_s {
 	unsigned int magic;
 	unsigned int version;
+	unsigned int flags;
 	offset_t size;
 	offset_t lookup[LOOKUP_MAX];
 } header;
@@ -53,12 +55,12 @@ int stn(char* str);
 int strequ(char* a, char* b);
 void print_header(header* h);
 void print_node(node* n);
-node new_node(char in[INDEX_MAX], char v[VALUE_MAX]);
+node new_node(char in[INDEX_MAX], char v[VALUE_MAX], boolean_t t, boolean_t mov, boolean_t mis, condition_t c);
 header new_header();
 boolean_t db_exists(char* path);
 boolean_t new_db(char* path);
 return_header read_db_head(char* path);
 boolean_t db_entry_exists(char* path, char in[INDEX_MAX]);
-boolean_t set_entry(char* path, char in[INDEX_MAX], char v[VALUE_MAX]);
-return_node get_entry(char* path, char in[INDEX_MAX], char v[VALUE_MAX]);
+boolean_t set_entry(char* path, char in[INDEX_MAX], char v[VALUE_MAX], boolean_t t, boolean_t mov, boolean_t mis, condition_t c);
+return_node get_entry(char* path, char in[INDEX_MAX]);
 #endif

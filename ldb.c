@@ -26,15 +26,15 @@ void print_node(node* n){
 	printf("};\n");
 }
 
-node new_node(char in[INDEX_MAX], char v[VALUE_MAX]){
+node new_node(char in[INDEX_MAX], char v[VALUE_MAX], boolean_t t, boolean_t mov, boolean_t mis, condition_t c){
 	node r;
 	r.back = (offset_t)0;
 	r.next = (offset_t)0;
 	r.first = 0;
-	r.taken = 0;
-	r.moveable = 0;
-	r.missing = 0;
-	r.condition = EXCELENT;
+	r.taken = t;
+	r.moveable = mov;
+	r.missing = mis;
+	r.condition = c;
 	for(int i = 0; i < INDEX_MAX; i++){
 		r.index[i] = in[i];
 	}
@@ -60,11 +60,17 @@ header new_header(){
 boolean_t db_exists(char* path){
 	FILE* dbfile = fopen(path, "rb");
 	if(dbfile != NULL){
-		header head;
-		fread(&head, HEADERSIZE, 1, dbfile);
-		if(head.magic == MAGIC){
-			fclose(dbfile);
-			return 1;
+		unsigned int magic;
+		unsigned int version;
+		fread(&magic, UINTSIZE, 1, dbfile);
+		if(magic == MAGIC){
+			fread(&version, UINTSIZE, 1, dbfile);
+			
+			// DB has to be the same version
+			if(version == VERSION){
+				fclose(dbfile);
+				return 1;
+			}
 		}
 		fclose(dbfile);
 	}
@@ -156,7 +162,7 @@ boolean_t db_entry_exists(char* path, char in[INDEX_MAX]){
 	return 0;
 }
 
-boolean_t set_entry(char* path, char in[INDEX_MAX], char v[VALUE_MAX]){
+boolean_t set_entry(char* path, char in[INDEX_MAX], char v[VALUE_MAX], boolean_t t, boolean_t mov, boolean_t mis, condition_t c){
 	if(path == NULL){
 		// bath path
 		return 1;
@@ -183,7 +189,7 @@ boolean_t set_entry(char* path, char in[INDEX_MAX], char v[VALUE_MAX]){
 		offset = head.lookup[in[0]] = head.size;
 		
 		// node
-		node n = new_node(in,v);
+		node n = new_node(in,v,t,mov,mis,c);
 		n.back = 0;//offset;
 		n.first = 1;
 		
@@ -197,7 +203,7 @@ boolean_t set_entry(char* path, char in[INDEX_MAX], char v[VALUE_MAX]){
 		if(db_entry_exists(path,in)){
 			// node
 			node n;
-			node update = new_node(in,v);
+			node update = new_node(in,v,t,mov,mis,c);
 			
 			fseek(dbfile, offset, SEEK_SET);
 			fread(&n,NODESIZE,1,dbfile);
@@ -236,7 +242,7 @@ boolean_t set_entry(char* path, char in[INDEX_MAX], char v[VALUE_MAX]){
 		}else{
 			// node
 			node n;
-			node nw = new_node(in,v);
+			node nw = new_node(in,v,t,mov,mis,c);
 			
 			fseek(dbfile, offset, SEEK_SET);
 			fread(&n,NODESIZE,1,dbfile);
@@ -264,7 +270,7 @@ boolean_t set_entry(char* path, char in[INDEX_MAX], char v[VALUE_MAX]){
 	return 0;
 }
 
-return_node get_entry(char* path, char in[INDEX_MAX], char v[VALUE_MAX]){
+return_node get_entry(char* path, char in[INDEX_MAX]){
 	if(path == NULL){
 		// bath path
 		return (return_node){.error=1};
