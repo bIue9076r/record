@@ -50,17 +50,19 @@ typedef struct return_header_s {
 } return_header;
 
 
-void snc(char* des, int l, char* src);
-int stn(char* str);
-int strequ(char* a, char* b);
+// Private
+
 void print_header(header* h);
 void print_node(node* n);
 node new_node(char in[INDEX_MAX], char v[VALUE_MAX], boolean_t t, boolean_t mov, boolean_t mis, condition_t c);
 header new_header();
 boolean_t db_exists(char* path);
-boolean_t new_db(char* path);
 return_header read_db_head(char* path);
 boolean_t db_entry_exists(char* path, char in[INDEX_MAX]);
+
+// Public
+
+boolean_t new_db(char* path);
 boolean_t set_entry(char* path, char in[INDEX_MAX], char v[VALUE_MAX], boolean_t t, boolean_t mov, boolean_t mis, condition_t c);
 return_node get_entry(char* path, char in[INDEX_MAX]);
 #endif

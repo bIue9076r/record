@@ -3,6 +3,8 @@
 #include "ldb.h"
 #include "str.h"
 
+// Private
+
 void print_header(header* h){
 	printf("h = {\n");
 	printf("\tmagic = %d;\n",h->magic);
@@ -78,30 +80,6 @@ boolean_t db_exists(char* path){
 	return 0;
 }
 
-boolean_t new_db(char* path){
-	if(path == NULL){
-		// bath path
-		return 1;
-	}
-	
-	if(db_exists(path)){
-		// file exists
-		return 1;
-	}
-	
-	FILE* dbfile = fopen(path, "wb");
-	
-	if(dbfile == NULL){
-		// file not opened
-		return 1;
-	}
-	
-	header head = new_header();
-	fwrite(&head, HEADERSIZE, 1, dbfile);
-	fclose(dbfile);
-	return 0;
-}
-
 return_header read_db_head(char* path){
 	if(path == NULL){
 		// bath path
@@ -159,6 +137,32 @@ boolean_t db_entry_exists(char* path, char in[INDEX_MAX]){
 		fclose(dbfile);
 	}
 	
+	return 0;
+}
+
+// Public
+
+boolean_t new_db(char* path){
+	if(path == NULL){
+		// bath path
+		return 1;
+	}
+	
+	if(db_exists(path)){
+		// file exists
+		return 1;
+	}
+	
+	FILE* dbfile = fopen(path, "wb");
+	
+	if(dbfile == NULL){
+		// file not opened
+		return 1;
+	}
+	
+	header head = new_header();
+	fwrite(&head, HEADERSIZE, 1, dbfile);
+	fclose(dbfile);
 	return 0;
 }
 

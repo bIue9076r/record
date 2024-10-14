@@ -1,6 +1,9 @@
 /* String functions */
 #ifndef STR_C
 #define STR_C
+
+// Private
+
 void snc(char* des, int l, char* src){
 	for(int i = 0; i < l; i++){
 		des[i] = src[i];
