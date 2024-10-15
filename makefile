@@ -20,4 +20,5 @@ str: ./str.c ./str.h
 clean:
 	@rm ./ldb.o
 	@rm ./str.o
+	@rm ./*.out
 	@echo "[Cleaned]"

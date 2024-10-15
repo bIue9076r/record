@@ -22,8 +22,8 @@ WinY = 15
 WinW = 800 - 30
 WinH = 600 - 30
 WinR = 0xD2/0xFF
-WinG = 0xD4/0xFF
-WinB = 0xD4/0xFF
+WinG = 0xD2/0xFF
+WinB = 0xD2/0xFF
 
 TabX = WinX + 5
 TabY = WinY + 5
@@ -48,7 +48,16 @@ Bt3Y = TabY + ((TabH - TS)/2)
 Bt3W = TS
 Bt3H = TS
 
+SwdX = TabX
+SwdY = (TabY + TabH) + 5
+SwdW = TabW
+SwdH = WinH - (TabH + 15)
+SwdR = 0xE2/0xFF
+SwdG = 0xE2/0xFF
+SwdB = 0xE2/0xFF
+
 function love.load()
+	TASK = "Loading"
 	love.keyboard.setKeyRepeat(true)
 	for i,v in pairs(ldb) do
 		print(i,tostring(v))
@@ -100,7 +109,7 @@ function love.draw()
 		love.graphics.setColor({1,1,1})
 		
 		local TOF = (TabH - TS)/2
-		love.graphics.print("<o>    Personal Record Keeper v"..tostring(VERSION).."    |    "..("Standby"),TabX + TOF,TabY + TOF)
+		love.graphics.print("<o>    Personal Record Keeper v"..tostring(VERSION).."    |    "..(TASK),TabX + TOF,TabY + TOF)
 	end)
 	
 	MainWindow.mid:put(function()
@@ -125,13 +134,17 @@ function love.draw()
 	end)
 	
 	MainWindow.fore:put(function()
-		
+		love.graphics.setColor({SwdR,SwdG,SwdB})
+		love.graphics.rectangle("fill",SwdX,SwdY,SwdW,SwdH)
 	end)
 	
 	MainWindow.fore:put(function()
 		love.graphics.setColor({0,0,0})
-		
+		love.graphics.line(SwdX,SwdY,SwdX + SwdW,SwdY)
+		love.graphics.line(SwdX,SwdY,SwdX,SwdY + SwdH)
 		love.graphics.setColor({1,1,1})
+		love.graphics.line(SwdX + SwdW,SwdY,SwdX + SwdW,SwdY + SwdH)
+		love.graphics.line(SwdX,SwdY + SwdH,SwdX + SwdW,SwdY + SwdH)
 	end)
 	
 	MainWindow()
