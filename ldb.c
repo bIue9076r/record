@@ -59,27 +59,6 @@ header new_header(){
 	return r;
 }
 
-boolean_t db_exists(char* path){
-	FILE* dbfile = fopen(path, "rb");
-	if(dbfile != NULL){
-		unsigned int magic;
-		unsigned int version;
-		fread(&magic, UINTSIZE, 1, dbfile);
-		if(magic == MAGIC){
-			fread(&version, UINTSIZE, 1, dbfile);
-			
-			// DB has to be the same version
-			if(version == VERSION){
-				fclose(dbfile);
-				return 1;
-			}
-		}
-		fclose(dbfile);
-	}
-	
-	return 0;
-}
-
 return_header read_db_head(char* path){
 	if(path == NULL){
 		// bath path
@@ -102,6 +81,53 @@ return_header read_db_head(char* path){
 	fread(&head, HEADERSIZE, 1, dbfile);
 	fclose(dbfile);
 	return (return_header){.error=0, .header = head};
+}
+
+// Public
+
+boolean_t db_exists(char* path){
+	FILE* dbfile = fopen(path, "rb");
+	if(dbfile != NULL){
+		unsigned int magic;
+		unsigned int version;
+		fread(&magic, UINTSIZE, 1, dbfile);
+		if(magic == MAGIC){
+			fread(&version, UINTSIZE, 1, dbfile);
+			
+			// DB has to be the same version
+			if(version == VERSION){
+				fclose(dbfile);
+				return 1;
+			}
+		}
+		fclose(dbfile);
+	}
+	
+	return 0;
+}
+
+boolean_t new_db(char* path){
+	if(path == NULL){
+		// bad path
+		return 1;
+	}
+	
+	if(db_exists(path)){
+		// file exists
+		return 1;
+	}
+	
+	FILE* dbfile = fopen(path, "wb");
+	
+	if(dbfile == NULL){
+		// file not opened
+		return 1;
+	}
+	
+	header head = new_header();
+	fwrite(&head, HEADERSIZE, 1, dbfile);
+	fclose(dbfile);
+	return 0;
 }
 
 boolean_t db_entry_exists(char* path, char in[INDEX_MAX]){
@@ -137,32 +163,6 @@ boolean_t db_entry_exists(char* path, char in[INDEX_MAX]){
 		fclose(dbfile);
 	}
 	
-	return 0;
-}
-
-// Public
-
-boolean_t new_db(char* path){
-	if(path == NULL){
-		// bath path
-		return 1;
-	}
-	
-	if(db_exists(path)){
-		// file exists
-		return 1;
-	}
-	
-	FILE* dbfile = fopen(path, "wb");
-	
-	if(dbfile == NULL){
-		// file not opened
-		return 1;
-	}
-	
-	header head = new_header();
-	fwrite(&head, HEADERSIZE, 1, dbfile);
-	fclose(dbfile);
 	return 0;
 }
 

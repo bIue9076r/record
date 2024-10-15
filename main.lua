@@ -59,6 +59,10 @@ function love.load()
 	love.graphics.setFont(font.getFont('main'))
 	
 	MainWindow = Window.new()
+	
+	if (ldb.db_exists("./Records.ldb") == 0) then
+		ldb.new_db("./Records.ldb")
+	end
 end
 
 function love.update()
@@ -96,7 +100,7 @@ function love.draw()
 		love.graphics.setColor({1,1,1})
 		
 		local TOF = (TabH - TS)/2
-		love.graphics.print("<o>    Personal Record Keeper v"..tostring(VERSION),TabX + TOF,TabY + TOF)
+		love.graphics.print("<o>    Personal Record Keeper v"..tostring(VERSION).."    |    "..("Standby"),TabX + TOF,TabY + TOF)
 	end)
 	
 	MainWindow.mid:put(function()

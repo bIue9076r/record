@@ -11,6 +11,28 @@ static int L_new_db(lua_State *L){
 	return 1;
 }
 
+static int L_db_exists(lua_State *L){
+	char* path = (char*)luaL_checkstring(L,1);
+	boolean_t ret = db_exists(path);
+	lua_pushnumber(L,ret);
+	return 1;
+}
+
+static int L_db_entry_exists(lua_State *L){
+	char* path = (char*)luaL_checkstring(L,1);
+	char* _index = (char*)luaL_checkstring(L,2);
+	
+	char index[INDEX_MAX];
+	for(int i = 0; i < INDEX_MAX; i++){ index[i] = 0; }
+	for(int i = 0; _index != NULL && *_index != 0 && i < INDEX_MAX; i++){
+		index[i] = _index[i];
+	}
+	
+	boolean_t ret = db_entry_exists(path,index);
+	lua_pushnumber(L,ret);
+	return 1;
+}
+
 static int L_set_entry(lua_State *L){
 	char* path = (char*)luaL_checkstring(L,1);
 	char* _index = (char*)luaL_checkstring(L,2);
@@ -63,10 +85,12 @@ static int L_get_entry(lua_State* L){
 }
 
 static const struct luaL_Reg ldb [] = {
-	{"new_db",		&L_new_db},
-	{"set_entry",	&L_set_entry},
-	{"get_entry",	&L_get_entry},
-	{NULL,		NULL}				// sentinel
+	{"new_db",			&L_new_db},
+	{"set_entry",		&L_set_entry},
+	{"get_entry",		&L_get_entry},
+	{"db_exists",		&L_db_exists},
+	{"db_entry_exists",	&L_db_entry_exists},
+	{NULL,				NULL}					// sentinel
 };
 
 int luaopen_ldb(lua_State* L){

@@ -1,4 +1,5 @@
 *.o
 *.out
+*.ldb
 test.c
 test.lua
