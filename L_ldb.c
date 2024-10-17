@@ -18,6 +18,20 @@ static int L_db_exists(lua_State *L){
 	return 1;
 }
 
+static int L_read_db_head(lua_State* L){
+	char* path = (char*)luaL_checkstring(L,1);
+	
+	return_header ret = read_db_head(path);
+	if(ret.error){
+		lua_pushnumber(L,ret.error);
+		return 1;
+	}
+	
+	lua_pushnumber(L,ret.header.size);
+	lua_pushnumber(L,ret.header.flags);
+	return 2;
+}
+
 static int L_db_entry_exists(lua_State *L){
 	char* path = (char*)luaL_checkstring(L,1);
 	char* _index = (char*)luaL_checkstring(L,2);
@@ -88,6 +102,7 @@ static const struct luaL_Reg ldb [] = {
 	{"new_db",			&L_new_db},
 	{"set_entry",		&L_set_entry},
 	{"get_entry",		&L_get_entry},
+	{"read_db_head",	&L_read_db_head},
 	{"db_exists",		&L_db_exists},
 	{"db_entry_exists",	&L_db_entry_exists},
 	{NULL,				NULL}					// sentinel
@@ -95,5 +110,17 @@ static const struct luaL_Reg ldb [] = {
 
 int luaopen_ldb(lua_State* L){
 	luaL_openlib(L, "ldb", ldb, 0);
+	lua_pushnumber(L, VERSION);
+	lua_setfield(L, -2, "version");
+	lua_pushnumber(L, NODESIZE);
+	lua_setfield(L, -2, "nodesize");
+	lua_pushnumber(L, HEADERSIZE);
+	lua_setfield(L, -2, "headersize");
+	lua_pushnumber(L, LOOKUP_MAX);
+	lua_setfield(L, -2, "lookup_max");
+	lua_pushnumber(L, INDEX_MAX);
+	lua_setfield(L, -2, "index_max");
+	lua_pushnumber(L, VALUE_MAX);
+	lua_setfield(L, -2, "value_max");
 	return 1;
 }

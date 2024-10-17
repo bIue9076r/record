@@ -52,35 +52,12 @@ header new_header(){
 	header r;
 	r.magic = MAGIC;
 	r.version = VERSION;
+	r.flags = 0;
 	r.size = HEADERSIZE;
 	for (int i = 0; i < LOOKUP_MAX; i++){
 		r.lookup[i] = 0;
 	}
 	return r;
-}
-
-return_header read_db_head(char* path){
-	if(path == NULL){
-		// bath path
-		return (return_header){.error=1};
-	}
-	
-	if(!db_exists(path)){
-		// file does not exist
-		return (return_header){.error=1};
-	}
-	
-	FILE* dbfile = fopen(path, "rb");
-	
-	if(dbfile == NULL){
-		// file not opened
-		return (return_header){.error=1};
-	}
-	
-	header head;
-	fread(&head, HEADERSIZE, 1, dbfile);
-	fclose(dbfile);
-	return (return_header){.error=0, .header = head};
 }
 
 // Public
@@ -128,6 +105,30 @@ boolean_t new_db(char* path){
 	fwrite(&head, HEADERSIZE, 1, dbfile);
 	fclose(dbfile);
 	return 0;
+}
+
+return_header read_db_head(char* path){
+	if(path == NULL){
+		// bath path
+		return (return_header){.error=1};
+	}
+	
+	if(!db_exists(path)){
+		// file does not exist
+		return (return_header){.error=1};
+	}
+	
+	FILE* dbfile = fopen(path, "rb");
+	
+	if(dbfile == NULL){
+		// file not opened
+		return (return_header){.error=1};
+	}
+	
+	header head;
+	fread(&head, HEADERSIZE, 1, dbfile);
+	fclose(dbfile);
+	return (return_header){.error=0, .header = head};
 }
 
 boolean_t db_entry_exists(char* path, char in[INDEX_MAX]){
@@ -217,10 +218,6 @@ boolean_t set_entry(char* path, char in[INDEX_MAX], char v[VALUE_MAX], boolean_t
 				update.first = n.first;
 				fseek(dbfile, offset, SEEK_SET);
 				fwrite(&update,NODESIZE,1,dbfile);
-				
-				head.size = head.size + NODESIZE;
-				fseek(dbfile, 0, SEEK_SET);
-				fwrite(&head, HEADERSIZE, 1, dbfile);
 				fclose(dbfile);
 				return 0;
 			}

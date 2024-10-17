@@ -8,7 +8,9 @@ require("Modules/window")
 require("Modules/ticker")
 require("ldb")
 
-VERSION = 0
+VERSION = ldb.version
+PATH = "./Records.ldb"
+NODES = 0
 focus = nil
 instring = ""
 
@@ -16,6 +18,7 @@ BR = 0
 BG = 0x80/0xFF
 BB = 0x7F/0xFF
 TS = 15
+POF = 5
 
 WinX = 15
 WinY = 15
@@ -25,36 +28,90 @@ WinR = 0xD2/0xFF
 WinG = 0xD2/0xFF
 WinB = 0xD2/0xFF
 
-TabX = WinX + 5
-TabY = WinY + 5
-TabW = WinW - 10
-TabH = 20
+TabX = WinX + POF
+TabY = WinY + POF
+TabW = WinW - (2*POF)
+TabH = (4*POF)
 TabR = 0x2A/0xFF
 TabG = 0x2A/0xFF
 TabB = 0x80/0xFF
 
-Bt1X = (TabX + TabW) - 3*(TS + 5)
+Bt1X = (TabX + TabW) - 3*(TS + POF)
 Bt1Y = TabY + ((TabH - TS)/2)
 Bt1W = TS
 Bt1H = TS
 
-Bt2X = (TabX + TabW) - 2*(TS + 5)
+Bt2X = (TabX + TabW) - 2*(TS + POF)
 Bt2Y = TabY + ((TabH - TS)/2)
 Bt2W = TS
 Bt2H = TS
 
-Bt3X = (TabX + TabW) - 1*(TS + 5)
+Bt3X = (TabX + TabW) - 1*(TS + POF)
 Bt3Y = TabY + ((TabH - TS)/2)
 Bt3W = TS
 Bt3H = TS
 
 SwdX = TabX
-SwdY = (TabY + TabH) + 5
+SwdY = (TabY + TabH) + POF
 SwdW = TabW
-SwdH = WinH - (TabH + 15)
+SwdH = WinH - (TabH + (3*POF))
 SwdR = 0xE2/0xFF
 SwdG = 0xE2/0xFF
 SwdB = 0xE2/0xFF
+
+function numToIndex(n)
+	local ret = ""
+	local cs = {
+		[0]="0", [1]="1", [2]="2", [3]="3",
+		[4]="4", [5]="5", [6]="6", [7]="7",
+		[8]="8", [9]="9", [10]="A", [11]="B",
+		[12]="C", [13]="D", [14]="E", [15]="F",
+	}
+	
+	local index = 17
+	while(n > 0) do
+		ret = cs[(n % 16)]..ret
+		n = math.floor(n/16)
+		index = index - 1
+	end
+	while(index > 1) do
+		ret = "0"..ret
+		index = index - 1
+	end
+	
+	return ret
+end
+
+function indexToNum(ind)
+	local ret = 0
+	local cs = {
+		["0"]=0, ["1"]=1, ["2"]=2, ["3"]=3,
+		["4"]=4, ["5"]=5, ["6"]=6, ["7"]=7,
+		["8"]=8, ["9"]=9, ["A"]=10, ["B"]=11,
+		["C"]=12, ["D"]=13, ["E"]=14, ["F"]=15,
+	}
+	
+	for i = 1, #ind do
+		ret = ret + (cs[ind:sub(i,i)] * math.pow(16,16 - i))
+	end
+	
+	return ret
+end
+
+function loading(dt)
+	local size, flags = ldb.read_db_head(PATH)
+	NODES = ((size - ldb.headersize)/ldb.nodesize)
+	print(NODES, numToIndex(NODES), indexToNum(numToIndex(NODES)))
+	TASK = "Viewing"
+end
+
+UPDATE = {
+	["Loading"] = loading,
+}
+TEXTINPUT = {
+}
+KEYPRESSED = {
+}
 
 function love.load()
 	TASK = "Loading"
@@ -69,21 +126,26 @@ function love.load()
 	
 	MainWindow = Window.new()
 	
-	if (ldb.db_exists("./Records.ldb") == 0) then
-		ldb.new_db("./Records.ldb")
+	if (ldb.db_exists(PATH) == 0) then
+		ldb.new_db(PATH)
 	end
 end
 
-function love.update()
-	
+function love.update(dt)
+	local f = UPDATE[TASK]
+	if f then f(dt) else 
+		
+	end
 end
 
 function love.textinput(t)
-	
+	local f = TEXTINPUT[TASK]
+	if f then f(t) end
 end
 
 function love.keypressed(key)
-	
+	local f = KEYPRESSED[TASK]
+	if f then f(key) end
 end
 
 function love.draw()
@@ -134,17 +196,18 @@ function love.draw()
 	end)
 	
 	MainWindow.fore:put(function()
-		love.graphics.setColor({SwdR,SwdG,SwdB})
-		love.graphics.rectangle("fill",SwdX,SwdY,SwdW,SwdH)
-	end)
-	
-	MainWindow.fore:put(function()
 		love.graphics.setColor({0,0,0})
 		love.graphics.line(SwdX,SwdY,SwdX + SwdW,SwdY)
 		love.graphics.line(SwdX,SwdY,SwdX,SwdY + SwdH)
 		love.graphics.setColor({1,1,1})
 		love.graphics.line(SwdX + SwdW,SwdY,SwdX + SwdW,SwdY + SwdH)
 		love.graphics.line(SwdX,SwdY + SwdH,SwdX + SwdW,SwdY + SwdH)
+	end)
+	
+	MainWindow.fore:put(function()
+		love.graphics.setColor({SwdR,SwdG,SwdB})
+		love.graphics.rectangle("fill",SwdX,SwdY,SwdW,SwdH)
+		love.graphics.setColor({1,1,1})
 	end)
 	
 	MainWindow()
