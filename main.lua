@@ -102,15 +102,50 @@ function loading(dt)
 	local size, flags = ldb.read_db_head(PATH)
 	NODES = ((size - ldb.headersize)/ldb.nodesize)
 	print(NODES, numToIndex(NODES), indexToNum(numToIndex(NODES)))
-	TASK = "Viewing"
+	TASK = "Overview"
+end
+
+function new_values(t)
+	
+end
+
+function new_keys(key)
+	
+end
+
+function overview(dt)
+	
+end
+
+function overview_key(key)
+	
+end
+
+function viewing(dt)
+	
+end
+
+function viewing_text(t)
+	
+end
+
+function viewing_key(key)
+	
 end
 
 UPDATE = {
 	["Loading"] = loading,
+	["Overview"] = overview,
+	["Viewing"] = viewing,
 }
 TEXTINPUT = {
+	["New_Values"] = new_values,
+	["Viewing"] = viewing_text,
 }
 KEYPRESSED = {
+	["New_Keys"] = new_keys,
+	["Overview"] = overview_key,
+	["Viewing"] = viewing_key,
 }
 
 function love.load()
