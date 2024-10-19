@@ -114,8 +114,41 @@ function new_keys(key)
 end
 
 function overview(dt)
+	W01X = TabX + POF
+	W01Y = (TabY + TabH) + (2*POF)
+	W01W = ((TabW - (2*POF))/2)
+	W01H = WinH - (TabH + (5*POF))
+	W01R = 0xE2/0xFF
+	W01G = 0x02/0xFF
+	W01B = 0xE2/0xFF
+	
+	W02X = W01X + W01W + POF
+	W02Y = (TabY + TabH) + (2*POF)
+	W02W = ((TabW - (2*POF))/2) - POF
+	W02H = WinH - (TabH + (5*POF))
+	W02R = 0x02/0xFF
+	W02G = 0xE2/0xFF
+	W02B = 0x02/0xFF
+	
 	MainWindow.fore:put(function()
-		love.graphics.print("Hello World",250,300)
+		love.graphics.setColor({0,0,0})
+		love.graphics.line(W01X,W01Y,W01X + W01W,W01Y)
+		love.graphics.line(W01X,W01Y,W01X,W01Y + W01H)
+		love.graphics.line(W02X,W02Y,W02X + W02W,W02Y)
+		love.graphics.line(W02X,W02Y,W02X,W02Y + W02H)
+		love.graphics.setColor({1,1,1})
+		love.graphics.line(W01X + W01W,W01Y,W01X + W01W,W01Y + W01H)
+		love.graphics.line(W01X,W01Y + W01H,W01X + W01W,W01Y + W01H)
+		love.graphics.line(W02X + W02W,W02Y,W02X + W02W,W02Y + W02H)
+		love.graphics.line(W02X,W02Y + W02H,W02X + W02W,W02Y + W02H)
+	end)
+	
+	MainWindow.fore:put(function()
+		love.graphics.setColor({W01R,W01G,W01B})
+		love.graphics.rectangle("fill",W01X,W01Y,W01W,W01H)
+		love.graphics.setColor({W02R,W02G,W02B})
+		love.graphics.rectangle("fill",W02X,W02Y,W02W,W02H)
+		love.graphics.setColor({1,1,1})
 	end)
 end
 
@@ -186,8 +219,6 @@ function love.keypressed(key)
 end
 
 function love.draw()
-	love.graphics.print("Hello World",250,300)
-	
 	MainWindow.back:put(function()
 		love.graphics.line(WinX,WinY,WinX + WinW,WinY)
 		love.graphics.line(WinX,WinY,WinX,WinY + WinH)
