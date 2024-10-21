@@ -131,6 +131,17 @@ function overview(dt)
 	W02B = 0x02/0xFF
 	
 	MainWindow.fore:put(function()
+		love.graphics.print({{1,1,1},"Path: "..PATH},W01X,W01Y)
+		love.graphics.print({{1,1,1},"Nodes: "..NODES},W01X,W01Y + TS)
+		love.graphics.print({{1,1,1},"Index: "},W02X,W02Y)
+		love.graphics.print({{1,1,1},"Value: "},W02X,W02Y + TS)
+		love.graphics.print({{1,1,1},"Taken: "},W02X,W02Y + (2*TS))
+		love.graphics.print({{1,1,1},"Moveable: "},W02X,W02Y + (3*TS))
+		love.graphics.print({{1,1,1},"Missing: "},W02X,W02Y + (4*TS))
+		love.graphics.print({{1,1,1},"Condition: "},W02X,W02Y + (5*TS))
+	end)
+	
+	MainWindow.fore:put(function()
 		love.graphics.setColor({0,0,0})
 		love.graphics.line(W01X,W01Y,W01X + W01W,W01Y)
 		love.graphics.line(W01X,W01Y,W01X,W01Y + W01H)
