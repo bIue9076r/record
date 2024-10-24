@@ -10,7 +10,8 @@ require("ldb")
 
 VERSION = ldb.version
 PATH = "./Records.ldb"
-NODES = 0
+NODE_NUM = 0
+NODES = {}
 focus = nil
 instring = ""
 
@@ -100,8 +101,20 @@ end
 
 function loading(dt)
 	local size, flags = ldb.read_db_head(PATH)
-	NODES = ((size - ldb.headersize)/ldb.nodesize)
-	print(NODES, numToIndex(NODES), indexToNum(numToIndex(NODES)))
+	NODE_NUM = ((size - ldb.headersize)/ldb.nodesize)
+	print(NODE_NUM, numToIndex(NODE_NUM), indexToNum(numToIndex(NODE_NUM)))
+	local r = ldb.db_entry_exists(PATH,numToIndex(1))
+	if(r == 0) then
+		NODE_NUM = 1 + NODE_NUM
+	end
+	ldb.set_entry(PATH,numToIndex(1),"Value",0,0,0,0)
+	repeat
+		local i = i or 1
+		table.insert(NODES,{
+			ldb.get_entry(PATH,numToIndex(i))
+		});
+	until (#NODES >= NODE_NUM)
+	print(#NODES)
 	TASK = "Overview"
 end
 
@@ -132,7 +145,7 @@ function overview(dt)
 	
 	MainWindow.fore:put(function()
 		love.graphics.print({{1,1,1},"Path: "..PATH},W01X,W01Y)
-		love.graphics.print({{1,1,1},"Nodes: "..NODES},W01X,W01Y + TS)
+		love.graphics.print({{1,1,1},"Nodes: "..NODE_NUM},W01X,W01Y + TS)
 		love.graphics.print({{1,1,1},"Index: "},W02X,W02Y)
 		love.graphics.print({{1,1,1},"Value: "},W02X,W02Y + TS)
 		love.graphics.print({{1,1,1},"Taken: "},W02X,W02Y + (2*TS))
