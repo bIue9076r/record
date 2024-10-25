@@ -69,7 +69,7 @@ function numToIndex(n)
 		[12]="C", [13]="D", [14]="E", [15]="F",
 	}
 	
-	local index = 17
+	local index = 16
 	while(n > 0) do
 		ret = cs[(n % 16)]..ret
 		n = math.floor(n/16)
@@ -223,6 +223,9 @@ function love.load()
 	if (ldb.db_exists(PATH) == 0) then
 		ldb.new_db(PATH)
 	end
+	
+	local size = ldb.read_db_head(PATH)
+	print(size)
 end
 
 function love.update(dt)

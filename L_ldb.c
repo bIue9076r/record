@@ -122,5 +122,19 @@ int luaopen_ldb(lua_State* L){
 	lua_setfield(L, -2, "index_max");
 	lua_pushnumber(L, VALUE_MAX);
 	lua_setfield(L, -2, "value_max");
+	lua_pushnumber(L, 1);
+	lua_setfield(L, -2, "True");
+	lua_pushnumber(L, 0);
+	lua_setfield(L, -2, "False");
+	lua_pushnumber(L,POOR);
+	lua_setfield(L, -2, "poor");
+	lua_pushnumber(L,MODERATE);
+	lua_setfield(L, -2, "moderate");
+	lua_pushnumber(L,GOOD);
+	lua_setfield(L, -2, "good");
+	lua_pushnumber(L,GREAT);
+	lua_setfield(L, -2, "great");
+	lua_pushnumber(L,EXCELENT);
+	lua_setfield(L, -2, "excelent");
 	return 1;
 }
