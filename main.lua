@@ -60,6 +60,32 @@ SwdR = 0xE2/0xFF
 SwdG = 0xE2/0xFF
 SwdB = 0xE2/0xFF
 
+function printNode(nd)
+	local bts = {[ldb.False] = "False", [ldb.True] = "True"}
+	local cts = {
+		[ldb.poor] = "Poor",
+		[ldb.moderate] = "Moderate",
+		[ldb.good] = "Good",
+		[ldb.great] = "Great",
+		[ldb.excelent] = "Excelent",
+	}
+	
+	print("[Index]: "..nd[1])
+	print("[Taken]: "..
+		tostring(bts[nd[3]])
+	)
+	print("[Moveable]: "..
+		tostring(bts[nd[4]])
+	)
+	print("[Missing]: "..
+		tostring(bts[nd[5]])
+	)
+	print("[Condition]: "..
+		tostring(cts[nd[6]])
+	)
+	print("[Value]: "..nd[2])
+end
+
 function numToIndex(n)
 	local ret = ""
 	local cs = {
@@ -103,10 +129,12 @@ function loading(dt)
 	local size, flags = ldb.read_db_head(PATH)
 	NODE_NUM = ((size - ldb.headersize)/ldb.nodesize)
 	print(NODE_NUM, numToIndex(NODE_NUM), indexToNum(numToIndex(NODE_NUM)))
+	
 	local r = ldb.db_entry_exists(PATH,numToIndex(1))
 	if(r == 0) then
 		NODE_NUM = 1 + NODE_NUM
 	end
+	
 	ldb.set_entry(PATH,numToIndex(1),"Value",0,0,0,0)
 	repeat
 		local i = i or 1
@@ -114,7 +142,7 @@ function loading(dt)
 			ldb.get_entry(PATH,numToIndex(i))
 		});
 	until (#NODES >= NODE_NUM)
-	print(#NODES)
+	
 	TASK = "Overview"
 end
 
