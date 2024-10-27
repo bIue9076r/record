@@ -60,8 +60,17 @@ SwdR = 0xE2/0xFF
 SwdG = 0xE2/0xFF
 SwdB = 0xE2/0xFF
 
-function printNode(nd)
+function updateNodeNum()
+	local size, flags = ldb.read_db_head(PATH)
+	NODE_NUM = ((size - ldb.headersize)/ldb.nodesize)
+end
+
+function boolToStr(b)
 	local bts = {[ldb.False] = "False", [ldb.True] = "True"}
+	return bts[b] or ""
+end
+
+function condToStr(c)
 	local cts = {
 		[ldb.poor] = "Poor",
 		[ldb.moderate] = "Moderate",
@@ -70,18 +79,23 @@ function printNode(nd)
 		[ldb.excelent] = "Excelent",
 	}
 	
+	return cts[c] or ""
+end
+
+function printNode(nd)
+	
 	print("[Index]: "..nd[1])
 	print("[Taken]: "..
-		tostring(bts[nd[3]])
+		boolToStr(nd[3])
 	)
 	print("[Moveable]: "..
-		tostring(bts[nd[4]])
+		boolToStr(nd[4])
 	)
 	print("[Missing]: "..
-		tostring(bts[nd[5]])
+		boolToStr(nd[5])
 	)
 	print("[Condition]: "..
-		tostring(cts[nd[6]])
+		condToStr(nd[6])
 	)
 	print("[Value]: "..nd[2])
 end
@@ -126,16 +140,8 @@ function indexToNum(ind)
 end
 
 function loading(dt)
-	local size, flags = ldb.read_db_head(PATH)
-	NODE_NUM = ((size - ldb.headersize)/ldb.nodesize)
-	print(NODE_NUM, numToIndex(NODE_NUM), indexToNum(numToIndex(NODE_NUM)))
-	
-	local r = ldb.db_entry_exists(PATH,numToIndex(1))
-	if(r == 0) then
-		NODE_NUM = 1 + NODE_NUM
-	end
-	
 	ldb.set_entry(PATH,numToIndex(1),"Value",0,0,0,0)
+	updateNodeNum()
 	repeat
 		local i = i or 1
 		table.insert(NODES,{
@@ -171,15 +177,24 @@ function overview(dt)
 	W02G = 0xE2/0xFF
 	W02B = 0x02/0xFF
 	
+	local ND = NODES[1] or {}
+	
+	local IND = tostring(ND[1])
+	local VAL = tostring(ND[2])
+	local TKN = boolToStr(ND[3])
+	local MOV = boolToStr(ND[4])
+	local MIS = boolToStr(ND[5])
+	local CND = condToStr(ND[6])
+	
 	MainWindow.fore:put(function()
 		love.graphics.print({{1,1,1},"Path: "..PATH},W01X,W01Y)
 		love.graphics.print({{1,1,1},"Nodes: "..NODE_NUM},W01X,W01Y + TS)
-		love.graphics.print({{1,1,1},"Index: "},W02X,W02Y)
-		love.graphics.print({{1,1,1},"Value: "},W02X,W02Y + TS)
-		love.graphics.print({{1,1,1},"Taken: "},W02X,W02Y + (2*TS))
-		love.graphics.print({{1,1,1},"Moveable: "},W02X,W02Y + (3*TS))
-		love.graphics.print({{1,1,1},"Missing: "},W02X,W02Y + (4*TS))
-		love.graphics.print({{1,1,1},"Condition: "},W02X,W02Y + (5*TS))
+		--love.graphics.print({{1,1,1},"Index: \""..(IND).."\""},W02X,W02Y)
+		love.graphics.print({{1,1,1},"Taken: "..(TKN)},W02X,W02Y + (0*TS))
+		love.graphics.print({{1,1,1},"Moveable: "..(MOV)},W02X,W02Y + (1*TS))
+		love.graphics.print({{1,1,1},"Missing: "..(MIS)},W02X,W02Y + (2*TS))
+		love.graphics.print({{1,1,1},"Condition: "..(CND)},W02X,W02Y + (3*TS))
+		love.graphics.print({{1,1,1},"Value: "..(VAL)},W02X,W02Y + (4*TS))
 	end)
 	
 	MainWindow.fore:put(function()
@@ -253,7 +268,6 @@ function love.load()
 	end
 	
 	local size = ldb.read_db_head(PATH)
-	print(size)
 end
 
 function love.update(dt)
