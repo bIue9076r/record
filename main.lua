@@ -82,24 +82,6 @@ function condToStr(c)
 	return cts[c] or ""
 end
 
-function printNode(nd)
-	
-	print("[Index]: "..nd[1])
-	print("[Taken]: "..
-		boolToStr(nd[3])
-	)
-	print("[Moveable]: "..
-		boolToStr(nd[4])
-	)
-	print("[Missing]: "..
-		boolToStr(nd[5])
-	)
-	print("[Condition]: "..
-		condToStr(nd[6])
-	)
-	print("[Value]: "..nd[2])
-end
-
 function numToIndex(n)
 	local ret = ""
 	local cs = {
@@ -140,7 +122,6 @@ function indexToNum(ind)
 end
 
 function loading(dt)
-	ldb.set_entry(PATH,numToIndex(1),"Value",0,0,0,0)
 	updateNodeNum()
 	repeat
 		local i = i or 1
@@ -166,18 +147,18 @@ function overview(dt)
 	W01W = ((TabW - (2*POF))/2)
 	W01H = WinH - (TabH + (5*POF))
 	W01R = 0xE2/0xFF
-	W01G = 0x02/0xFF
+	W01G = 0xE2/0xFF
 	W01B = 0xE2/0xFF
 	
 	W02X = W01X + W01W + POF
 	W02Y = (TabY + TabH) + (2*POF)
 	W02W = ((TabW - (2*POF))/2) - POF
 	W02H = WinH - (TabH + (5*POF))
-	W02R = 0x02/0xFF
+	W02R = 0xE2/0xFF
 	W02G = 0xE2/0xFF
-	W02B = 0x02/0xFF
+	W02B = 0xE2/0xFF
 	
-	local ND = NODES[1] or {}
+	local ND = NODES[#NODES] or {}
 	
 	local IND = tostring(ND[1])
 	local VAL = tostring(ND[2])
@@ -189,12 +170,12 @@ function overview(dt)
 	MainWindow.fore:put(function()
 		love.graphics.print({{1,1,1},"Path: "..PATH},W01X,W01Y)
 		love.graphics.print({{1,1,1},"Nodes: "..NODE_NUM},W01X,W01Y + TS)
-		--love.graphics.print({{1,1,1},"Index: \""..(IND).."\""},W02X,W02Y)
-		love.graphics.print({{1,1,1},"Taken: "..(TKN)},W02X,W02Y + (0*TS))
-		love.graphics.print({{1,1,1},"Moveable: "..(MOV)},W02X,W02Y + (1*TS))
-		love.graphics.print({{1,1,1},"Missing: "..(MIS)},W02X,W02Y + (2*TS))
-		love.graphics.print({{1,1,1},"Condition: "..(CND)},W02X,W02Y + (3*TS))
-		love.graphics.print({{1,1,1},"Value: "..(VAL)},W02X,W02Y + (4*TS))
+		love.graphics.print({{1,1,1},"Index: \""..(IND).."\""},W02X,W02Y)
+		love.graphics.print({{1,1,1},"Taken: "..(TKN)},W02X,W02Y + (2*TS))
+		love.graphics.print({{1,1,1},"Moveable: "..(MOV)},W02X,W02Y + (3*TS))
+		love.graphics.print({{1,1,1},"Missing: "..(MIS)},W02X,W02Y + (4*TS))
+		love.graphics.print({{1,1,1},"Condition: "..(CND)},W02X,W02Y + (5*TS))
+		love.graphics.print({{1,1,1},"Value: "..(VAL)},W02X,W02Y + (6*TS))
 	end)
 	
 	MainWindow.fore:put(function()
