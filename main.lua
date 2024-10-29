@@ -151,17 +151,17 @@ function overview(dt)
 	W01Y = (TabY + TabH) + (2*POF)
 	W01W = ((TabW - (2*POF))/2)
 	W01H = WinH - (TabH + (5*POF))
-	W01R = 0xE2/0xFF
-	W01G = 0xE2/0xFF
-	W01B = 0xE2/0xFF
+	W01R = 0xC2/0xFF
+	W01G = 0xC2/0xFF
+	W01B = 0xC2/0xFF
 	
 	W02X = W01X + W01W + POF
 	W02Y = (TabY + TabH) + (2*POF)
 	W02W = ((TabW - (2*POF))/2) - POF
 	W02H = WinH - (TabH + (5*POF))
-	W02R = 0xE2/0xFF
-	W02G = 0xE2/0xFF
-	W02B = 0xE2/0xFF
+	W02R = 0xC2/0xFF
+	W02G = 0xC2/0xFF
+	W02B = 0xC2/0xFF
 	
 	local ND = NODES[#NODES] or {}
 	
