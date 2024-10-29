@@ -8,8 +8,13 @@ require("Modules/window")
 require("Modules/ticker")
 require("ldb")
 
+SDIR = love.filesystem.getSaveDirectory()
+if (not(love.filesystem.getInfo(SDIR))) then
+	love.filesystem.createDirectory(SDIR)
+end
+
 VERSION = ldb.version
-PATH = "./Records.ldb"
+PATH = tostring(SDIR or "").."/Records.ldb"
 NODE_NUM = 0
 NODES = {}
 focus = nil
@@ -123,12 +128,12 @@ end
 
 function loading(dt)
 	updateNodeNum()
-	repeat
+	while(#NODES <= NODE_NUM) do
 		local i = i or 1
 		table.insert(NODES,{
 			ldb.get_entry(PATH,numToIndex(i))
 		});
-	until (#NODES >= NODE_NUM)
+	end
 	
 	TASK = "Overview"
 end
