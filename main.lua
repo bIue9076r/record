@@ -173,8 +173,13 @@ function overview(dt)
 	local CND = condToStr(ND[6])
 	
 	MainWindow.fore:put(function()
-		love.graphics.print({{1,1,1},"Path: "..PATH},W01X,W01Y)
+	love.graphics.print({{1,1,1},"Path: ~"},W01X,W01Y)
 		love.graphics.print({{1,1,1},"Nodes: "..NODE_NUM},W01X,W01Y + TS)
+		love.graphics.print({{1,1,1},"Node: "..IND},W01X,W01Y + TS + TS)
+		
+		love.graphics.print({{1,1,1},"Get "..IND},W01X,W01Y + TS + TS)
+		love.graphics.print({{1,1,1},"Set "..IND},W01X,W01Y + TS + TS + TS)
+		
 		love.graphics.print({{1,1,1},"Index: \""..(IND).."\""},W02X,W02Y)
 		love.graphics.print({{1,1,1},"Taken: "..(TKN)},W02X,W02Y + (2*TS))
 		love.graphics.print({{1,1,1},"Moveable: "..(MOV)},W02X,W02Y + (3*TS))
