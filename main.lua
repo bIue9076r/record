@@ -181,8 +181,8 @@ function overview(dt)
 		love.graphics.print({{1,1,1},"Value: "..(VAL)},W02X,W02Y + (6*TS))
 		
 		-- button
-		love.graphics.print({{1,1,1},"Get "..IND},W01X,W01Y + TS + TS)
-		love.graphics.print({{1,1,1},"Set "..IND},W01X,W01Y + TS + TS + TS)
+		love.graphics.print({{1,1,1},"Get "..IND},W01X,W01Y + TS + TS + TS)
+		love.graphics.print({{1,1,1},"Set "..IND},W01X,W01Y + TS + TS + TS + TS)
 		
 		-- toggle
 		love.graphics.print({{1,1,1},"Taken: "..(TKN)},W02X,W02Y + (2*TS))
