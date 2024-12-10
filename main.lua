@@ -173,24 +173,24 @@ function overview(dt)
 	local CND = condToStr(ND[6])
 	
 	MainWindow.fore:put(function()
-	love.graphics.print({{0,0,0},"Path: "..PATH},W01X + TS,W01Y)
-		love.graphics.print({{0,0,0},"Nodes: "..NODE_NUM},W01X + TS,W01Y + TS)
+	love.graphics.print({{0,0,0},"Path: "..PATH},W01X + TS,W01Y + TS)
+		love.graphics.print({{0,0,0},"Nodes: "..NODE_NUM},W01X + TS,W01Y + TS + TS)
 		
 		-- textbox
-		love.graphics.print({{0,0,0},"Index: "..IND},W01X + TS,W01Y + TS + TS)
-		love.graphics.print({{0,0,0},"Value: "..(VAL)},W02X + TS,W02Y + (6*TS))
+		love.graphics.print({{0,0,0},"Index: "..IND},W01X + TS,W01Y + TS + TS + TS)
+		love.graphics.print({{0,0,0},"Value: "..(VAL)},W02X + TS,W02Y + (7*TS))
 		
 		-- button
-		love.graphics.print({{0,0,0},"Get"},W01X + TS,W01Y + TS + TS + TS)
-		love.graphics.print({{0,0,0},"Set"},W01X + TS,W01Y + TS + TS + TS + TS)
+		love.graphics.print({{0,0,0},"Get"},W01X + TS,W01Y + TS + TS + TS + TS)
+		love.graphics.print({{0,0,0},"Set"},W01X + TS,W01Y + TS + TS + TS + TS + TS)
 		
 		-- toggle
-		love.graphics.print({{0,0,0},"Taken: "..(TKN)},W02X + TS,W02Y + (2*TS))
-		love.graphics.print({{0,0,0},"Moveable: "..(MOV)},W02X + TS,W02Y + (3*TS))
-		love.graphics.print({{0,0,0},"Missing: "..(MIS)},W02X + TS,W02Y + (4*TS))
+		love.graphics.print({{0,0,0},"Taken: "..(TKN)},W02X + TS,W02Y + (3*TS))
+		love.graphics.print({{0,0,0},"Moveable: "..(MOV)},W02X + TS,W02Y + (4*TS))
+		love.graphics.print({{0,0,0},"Missing: "..(MIS)},W02X + TS,W02Y + (5*TS))
 		
 		-- slider
-		love.graphics.print({{0,0,0},"Condition: "..(CND)},W02X + TS,W02Y + (5*TS))
+		love.graphics.print({{0,0,0},"Condition: "..(CND)},W02X + TS,W02Y + (6*TS))
 	end)
 	
 	MainWindow.fore:put(function()
