@@ -213,6 +213,8 @@ function overview(dt)
 		love.graphics.rectangle("fill",W02X,W02Y,W02W,W02H)
 		love.graphics.setColor({1,1,1})
 	end)
+	
+	local x, y = love.mouse.getPosition()
 end
 
 function overview_key(key)
