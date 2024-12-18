@@ -173,6 +173,11 @@ function overview(dt)
 	local CND = condToStr(ND[6])
 	
 	MainWindow.fore:put(function()
+		love.graphics.rectangle("fill",W01X + TS,W01Y + TS*(10),50,20)
+		love.graphics.rectangle("fill",W01X + TS,W01Y + TS*(12),50,20)
+	end)
+	
+	MainWindow.fore:put(function()
 	love.graphics.print({{0,0,0},"Path: "..PATH},W01X + TS,W01Y + TS)
 		love.graphics.print({{0,0,0},"Nodes: "..NODE_NUM},W01X + TS,W01Y + TS + TS)
 		
@@ -215,6 +220,7 @@ function overview(dt)
 	end)
 	
 	local x, y = love.mouse.getPosition()
+	
 end
 
 function overview_key(key)
